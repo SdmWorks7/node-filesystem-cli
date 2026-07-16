@@ -47,17 +47,32 @@ function write(cleanFilename, content){
     );
 }
 
+function appendContent(cleanFilename, content){
+    fs.appendFile(
+        `${cleanFilename}.txt`,
+        `\n${content}`,
+        (error) => {
+            if (error) {
+                console.log("Something went wrong:", error.message);
+                return;
+            }
+
+            console.log("Content added to the file successfully!");
+        }
+    );
+}
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
 
-    if(operation !== "create" && operation!=="read" && operation!=="write"){
+    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append"){
         console.log("enter a valid command my G!");
         return;
     }
 
-    if(operation==="write" && !(content)){
+    if((operation==="write" || operation==="append") && !(content)){
         console.log("please specify the contents to write!");
         return;
     }
@@ -76,6 +91,9 @@ function main() {
     }
     else if(operation === "write"){
         write(cleanFilename, content);
+    }
+    else if(operation === "append"){
+        appendContent(cleanFilename, content);
     }
 
 }
