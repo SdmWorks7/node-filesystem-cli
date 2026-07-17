@@ -141,7 +141,19 @@ function main() {
     const newFilename = process.argv[4];
     let cleanFilename, cleanNewFilename;
 
-    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls" && operation!=="rename" && operation!=="rmdir"){
+    const commands = {
+    create: () => create(cleanFilename),
+    read: () => read(cleanFilename),
+    write: () => write(cleanFilename, content),
+    append: () => appendContent(cleanFilename, content),
+    delete: () => removeFile(cleanFilename),
+    mkdir: () => makeDirectory(filename),
+    ls: () => listFiles(),
+    rename: () => renameFile(cleanFilename, cleanNewFilename),
+    rmdir: () => removeDirectory(filename)
+    };
+
+    if(!commands[operation]){
         console.log("enter a valid command my G!");
         return;
     }
@@ -167,39 +179,8 @@ function main() {
         cleanFilename = normalizeFilename(filename);
     }
 
-    if (operation === "create") {
-        create(cleanFilename);
-    }
-    else if(operation === "read"){
-        read(cleanFilename);
-    }
-    else if(operation === "write"){
-        write(cleanFilename, content);
-    }
-    else if(operation === "append"){
-        appendContent(cleanFilename, content);
-    }
-    else if(operation === "delete"){
-        removeFile(cleanFilename);
-    }
-    else if(operation ==="mkdir"){
-        makeDirectory(filename);
-    }
-    else if(operation ==="ls"){
-        listFiles();
-    }
-    else if(operation==="rename"){
-        renameFile(cleanFilename, cleanNewFilename);
-    }
-    else if(operation==="rmdir"){
-        removeDirectory(filename);
-    };
+    commands[operation]();
 
 }
 
 main();
-
-
-
-
-
