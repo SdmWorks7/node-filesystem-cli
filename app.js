@@ -90,12 +90,27 @@ function makeDirectory(cleanFilename){
     );
 }
 
+function listFiles(){
+    fs.readdir(
+        process.cwd(),
+        (error, files) => {
+            if (error) {
+                console.log("Something went wrong:", error.message);
+                return;
+            }
+
+            console.log(files.join("\n"));
+        }
+    );
+}
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
+    let cleanFilename;
 
-    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir"){
+    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls"){
         console.log("enter a valid command my G!");
         return;
     }
@@ -105,11 +120,13 @@ function main() {
         return;
     }
 
-    if (!filename) {
+    if (operation!=="ls" && (!filename)) {
         console.log("You don't want an empty filename!");
         return;
     }
-    const cleanFilename = normalizeFilename(filename);
+    if(operation!=="ls"){
+        cleanFilename = normalizeFilename(filename);
+    }
 
     if (operation === "create") {
         create(cleanFilename);
@@ -122,11 +139,16 @@ function main() {
     }
     else if(operation === "append"){
         appendContent(cleanFilename, content);
-    }else if(operation === "delete"){
+    }
+    else if(operation === "delete"){
         removeFile(cleanFilename);
-    }else if(operation ==="mkdir"){
+    }
+    else if(operation ==="mkdir"){
         makeDirectory(filename);
     }
+    else if(operation ==="ls"){
+        listFiles();
+    };
 
 }
 
