@@ -104,15 +104,39 @@ function listFiles(){
     );
 }
 
+function renameFile(cleanFilename, cleanNewFilename){
+    fs.rename(
+        `${cleanFilename}.txt`,
+        `${cleanNewFilename}.txt`,
+        (error) => {
+            if (error) {
+                console.log("Something went wrong:", error.message);
+                return;
+            }
+
+            console.log("File name changed successfully");
+        }
+    );
+}
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
-    let cleanFilename;
+    const newFilename = process.argv[4];
+    let cleanFilename, cleanNewFilename;
 
-    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls"){
+    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls" && operation!=="rename"){
         console.log("enter a valid command my G!");
         return;
+    }
+
+    if(operation==="rename" && ((!filename) || (!newFilename))){
+            console.log("INVALID! enter the old and new file name!");
+        return;
+    } 
+    else if(operation==="rename" && newFilename){
+        cleanNewFilename = normalizeFilename(newFilename);
     }
 
     if((operation==="write" || operation==="append") && !(content)){
@@ -148,6 +172,9 @@ function main() {
     }
     else if(operation ==="ls"){
         listFiles();
+    }
+    else if(operation==="rename"){
+        renameFile(cleanFilename, cleanNewFilename);
     };
 
 }
