@@ -119,6 +119,21 @@ function renameFile(cleanFilename, cleanNewFilename){
     );
 }
 
+function removeDirectory(filename){
+    fs.rmdir(
+        `${filename}`,
+        (error) => {
+            if (error) {
+                console.log("Something went wrong:", error.message);
+                return;
+            }
+
+            console.log("Directory deleted successfully!");
+        }
+    );
+}
+
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
@@ -126,7 +141,7 @@ function main() {
     const newFilename = process.argv[4];
     let cleanFilename, cleanNewFilename;
 
-    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls" && operation!=="rename"){
+    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir" && operation!=="ls" && operation!=="rename" && operation!=="rmdir"){
         console.log("enter a valid command my G!");
         return;
     }
@@ -175,6 +190,9 @@ function main() {
     }
     else if(operation==="rename"){
         renameFile(cleanFilename, cleanNewFilename);
+    }
+    else if(operation==="rmdir"){
+        removeDirectory(filename);
     };
 
 }
