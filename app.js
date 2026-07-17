@@ -76,12 +76,26 @@ function removeFile(cleanFilename){
     );
 }
 
+function makeDirectory(cleanFilename){
+    fs.mkdir(
+        `${cleanFilename}`,
+        (error) => {
+            if (error) {
+                console.log("Something went wrong:", error.message);
+                return;
+            }
+
+            console.log("Directory created successfully!");
+        }
+    );
+}
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
 
-    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete"){
+    if(operation !== "create" && operation!=="read" && operation!=="write" && operation!=="append" && operation!=="delete" && operation!=="mkdir"){
         console.log("enter a valid command my G!");
         return;
     }
@@ -110,6 +124,8 @@ function main() {
         appendContent(cleanFilename, content);
     }else if(operation === "delete"){
         removeFile(cleanFilename);
+    }else if(operation ==="mkdir"){
+        makeDirectory(filename);
     }
 
 }
