@@ -1,15 +1,16 @@
 const fs = require("fs");
+const path = require("path");
 
 function normalizeFilename(filename){
-    if(filename.endsWith(".txt")){
-        return filename.slice(0, -4);
+    if(!path.extname(filename)){
+        return `${filename}.txt`;
     }
         return filename;
 }
 
 function create(cleanFilename){
     fs.writeFile(
-        `${cleanFilename}.txt`,
+        `${cleanFilename}`,
         "My G just created a file",
         (error) => {
             if (error) {
@@ -23,7 +24,7 @@ function create(cleanFilename){
 }
 
 function read(cleanFilename){
-    fs.readFile(`${cleanFilename}.txt`, "utf-8", (error, data)=>{
+    fs.readFile(`${cleanFilename}`, "utf-8", (error, data)=>{
             if(error){
                 console.log("Encountered an error", error.message);
                 return;
@@ -34,7 +35,7 @@ function read(cleanFilename){
 
 function write(cleanFilename, content){
     fs.writeFile(
-        `${cleanFilename}.txt`,
+        `${cleanFilename}`,
         `${content}`,
         (error) => {
             if (error) {
@@ -49,7 +50,7 @@ function write(cleanFilename, content){
 
 function appendContent(cleanFilename, content){
     fs.appendFile(
-        `${cleanFilename}.txt`,
+        `${cleanFilename}`,
         `\n${content}`,
         (error) => {
             if (error) {
@@ -64,7 +65,7 @@ function appendContent(cleanFilename, content){
 
 function removeFile(cleanFilename){
     fs.unlink(
-        `${cleanFilename}.txt`,
+        `${cleanFilename}`,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
