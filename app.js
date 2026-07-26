@@ -107,8 +107,8 @@ function listFiles(){
 
 function renameFile(cleanFilename, cleanNewFilename){
     fs.rename(
-        `${cleanFilename}.txt`,
-        `${cleanNewFilename}.txt`,
+        `${cleanFilename}`,
+        `${cleanNewFilename}`,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -162,7 +162,7 @@ function main() {
     let cleanFilename, cleanNewFilename, filePath;
 
     const commands = {
-    create: () => create(filepath),
+    create: () => create(filePath),
     read: () => read(filePath),
     write: () => write(filePath, content),
     append: () => appendContent(filePath, content),
@@ -184,6 +184,7 @@ function main() {
     } 
     else if(operation==="rename" && newFilename){
         cleanNewFilename = normalizeFilename(newFilename);
+        filePath = getSafePath(cleanNewFilename);
     }
 
     if((operation==="write" || operation==="append") && !(content)){
