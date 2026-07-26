@@ -134,20 +134,39 @@ function removeDirectory(filename){
     );
 }
 
+function getSafePath(userInput) {
+    const baseDirectory = process.cwd();
+
+    const requestedPath = path.resolve(
+        baseDirectory,
+        userInput
+    );
+
+    const relativePath = path.relative(
+        baseDirectory,
+        requestedPath
+    );
+
+    if (relativePath.startsWith("..")) {
+        throw new Error("Path escapes the working directory");
+    }
+
+    return requestedPath;
+}
 
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
     const newFilename = process.argv[4];
-    let cleanFilename, cleanNewFilename;
+    let cleanFilename, cleanNewFilename, filePath;
 
     const commands = {
-    create: () => create(cleanFilename),
-    read: () => read(cleanFilename),
-    write: () => write(cleanFilename, content),
-    append: () => appendContent(cleanFilename, content),
-    delete: () => removeFile(cleanFilename),
+    create: () => create(filepath),
+    read: () => read(filePath),
+    write: () => write(filePath, content),
+    append: () => appendContent(filePath, content),
+    delete: () => removeFile(filePath),
     mkdir: () => makeDirectory(filename),
     ls: () => listFiles(),
     rename: () => renameFile(cleanFilename, cleanNewFilename),
@@ -178,6 +197,7 @@ function main() {
     }
     if(operation!=="ls"){
         cleanFilename = normalizeFilename(filename);
+        filePath = getSafePath(cleanFilename);
     }
 
     commands[operation]();
