@@ -10,7 +10,7 @@ function normalizeFilename(filename){
 
 function create(cleanFilename){
     fs.writeFile(
-        `${cleanFilename}`,
+            cleanFilename,
         "My G just created a file",
         (error) => {
             if (error) {
@@ -24,7 +24,7 @@ function create(cleanFilename){
 }
 
 function read(cleanFilename){
-    fs.readFile(`${cleanFilename}`, "utf-8", (error, data)=>{
+    fs.readFile(cleanFilename, "utf-8", (error, data)=>{
             if(error){
                 console.log("Encountered an error", error.message);
                 return;
@@ -35,8 +35,8 @@ function read(cleanFilename){
 
 function write(cleanFilename, content){
     fs.writeFile(
-        `${cleanFilename}`,
-        `${content}`,
+            cleanFilename,
+            content,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -50,7 +50,7 @@ function write(cleanFilename, content){
 
 function appendContent(cleanFilename, content){
     fs.appendFile(
-        `${cleanFilename}`,
+        cleanFilename,
         `\n${content}`,
         (error) => {
             if (error) {
@@ -65,7 +65,7 @@ function appendContent(cleanFilename, content){
 
 function removeFile(cleanFilename){
     fs.unlink(
-        `${cleanFilename}`,
+            cleanFilename,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -79,7 +79,7 @@ function removeFile(cleanFilename){
 
 function makeDirectory(cleanFilename){
     fs.mkdir(
-        `${cleanFilename}`,
+            cleanFilename,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -105,10 +105,10 @@ function listFiles(){
     );
 }
 
-function renameFile(cleanFilename, cleanNewFilename){
+function renameFile(filename, cleanFilename){
     fs.rename(
-        `${cleanFilename}`,
-        `${cleanNewFilename}`,
+            filename,
+            cleanFilename,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -122,7 +122,7 @@ function renameFile(cleanFilename, cleanNewFilename){
 
 function removeDirectory(filename){
     fs.rmdir(
-        `${filename}`,
+            filename,
         (error) => {
             if (error) {
                 console.log("Something went wrong:", error.message);
@@ -159,7 +159,7 @@ function main() {
     const filename = process.argv[3];
     const content = process.argv.slice(4).join(" ");
     const newFilename = process.argv[4];
-    let cleanFilename, cleanNewFilename, filePath;
+    let cleanFilename, cleanNewFilename, filePath, cleanFilePath;
 
     const commands = {
     create: () => create(filePath),
@@ -169,7 +169,7 @@ function main() {
     delete: () => removeFile(filePath),
     mkdir: () => makeDirectory(filename),
     ls: () => listFiles(),
-    rename: () => renameFile(cleanFilename, cleanNewFilename),
+    rename: () => renameFile(filePath, cleanFilePath),
     rmdir: () => removeDirectory(filename)
     };
 
@@ -184,7 +184,13 @@ function main() {
     } 
     else if(operation==="rename" && newFilename){
         cleanNewFilename = normalizeFilename(newFilename);
-        filePath = getSafePath(cleanNewFilename);
+        try{
+             cleanFilePath = getSafePath(cleanNewFilename);
+        }catch(error){
+            console.log("ERROR:", error.message);
+            return;
+        }
+       
     }
 
     if((operation==="write" || operation==="append") && !(content)){
@@ -198,7 +204,12 @@ function main() {
     }
     if(operation!=="ls"){
         cleanFilename = normalizeFilename(filename);
-        filePath = getSafePath(cleanFilename);
+        try{
+            filePath = getSafePath(cleanFilename);
+        }catch(error){
+            console.log("ERROR:", error.message);
+            return;
+        }
     }
 
     commands[operation]();
