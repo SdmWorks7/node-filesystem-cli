@@ -1,0 +1,21 @@
+{
+  "name": "filesystem-cli",
+  "version": "1.0.0",
+  "description": "A Command-line filesystem utility built with Node.js",
+  "homepage": "https://github.com/SdmWorks7/node-filesystem-cli#readme",
+  "bugs": {
+    "url": "https://github.com/SdmWorks7/node-filesystem-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SdmWorks7/node-filesystem-cli.git"
+  },
+  "license": "ISC",
+  "author": "Saumyadeep Mishra",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo Running tests....",
+    "start": "node app.js"
+  }
+}

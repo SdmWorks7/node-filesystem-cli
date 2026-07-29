@@ -154,6 +154,12 @@ function getSafePath(userInput) {
     return requestedPath;
 }
 
+function showHelp(){
+    console.log("Filesystem CLI\n");
+    console.log("usage:\n");
+    console.log("node app.js create <filename>\nnode app.js read <filename>\nnode app.js write <filename> <content>\nnode app.js append <filename> <content>\nnode app.js delete <filename>\nnode app.js mkdir <directory>\nnode app.js ls\nnode app.js rename <old> <new>\nnode app.js rmdir <directory>\nnode app.js help");
+}
+
 function main() {
     const operation = process.argv[2];
     const filename = process.argv[3];
@@ -170,11 +176,17 @@ function main() {
     mkdir: () => makeDirectory(filename),
     ls: () => listFiles(),
     rename: () => renameFile(filePath, cleanFilePath),
-    rmdir: () => removeDirectory(filename)
+    rmdir: () => removeDirectory(filename),
+    help: () => showHelp()
     };
 
+    if(!operation){
+        commands.help();
+        return;
+    }
     if(!commands[operation]){
-        console.log("enter a valid command my G!");
+        console.log(`Unknown command: ${operation}`);
+        console.log("Run:\n  node app.js help");
         return;
     }
 

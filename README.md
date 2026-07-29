@@ -19,7 +19,10 @@ A command-line filesystem utility built with Node.js that allows users to create
 Run the CLI using:
 
 ```bash
-node app.js <command> [arguments]
+git clone ...
+cd node-filesystem-cli
+npm install
+npm start
 ```
 
 ### Create a file
